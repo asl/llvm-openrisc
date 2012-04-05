@@ -1420,7 +1420,8 @@ Optional Features:
   --enable-targets        Build specific host targets: all or
                           target1,target2,... Valid targets are: host, x86,
                           x86_64, sparc, powerpc, arm, mips, spu, hexagon,
-                          xcore, msp430, ptx, cbe, and cpp (default=all)
+                          xcore, msp430, ptx, openrisc, cbe, and cpp
+                          (default=all)
   --enable-bindings       Build specific language bindings:
                           all,auto,none,{binding-name} (default=auto)
   --enable-libffi         Check for the presence of libffi (default is NO)
@@ -3900,6 +3901,7 @@ else
   hexagon-*)              llvm_cv_target_arch="Hexagon" ;;
   mblaze-*)               llvm_cv_target_arch="MBlaze" ;;
   ptx-*)                  llvm_cv_target_arch="PTX" ;;
+  or32-*)                 llvm_cv_target_arch="OpenRISC" ;;
   *)                      llvm_cv_target_arch="Unknown" ;;
 esac
 fi
@@ -5123,6 +5125,8 @@ else
  ;;
     PTX)         TARGET_HAS_JIT=0
  ;;
+    OpenRISC)    TARGET_HAS_JIT=0
+ ;;
     *)           TARGET_HAS_JIT=0
  ;;
   esac
@@ -5324,6 +5328,7 @@ case "$enableval" in
         hexagon)  TARGETS_TO_BUILD="Hexagon $TARGETS_TO_BUILD" ;;
         mblaze)   TARGETS_TO_BUILD="MBlaze $TARGETS_TO_BUILD" ;;
         ptx)      TARGETS_TO_BUILD="PTX $TARGETS_TO_BUILD" ;;
+        openrisc) TARGETS_TO_BUILD="OpenRISC $TARGETS_TO_BUILD" ;;
         host) case "$llvm_cv_target_arch" in
             x86)         TARGETS_TO_BUILD="X86 $TARGETS_TO_BUILD" ;;
             x86_64)      TARGETS_TO_BUILD="X86 $TARGETS_TO_BUILD" ;;
@@ -10384,7 +10389,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10387 "configure"
+#line 10392 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
