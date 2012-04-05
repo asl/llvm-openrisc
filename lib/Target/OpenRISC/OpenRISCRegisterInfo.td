@@ -20,16 +20,16 @@ class OpenRISCReg<bits<4> num, string n> : Register<n> {
 //  Registers
 //===----------------------------------------------------------------------===//
 
-def R0  : OpenRISCReg<0, "r0">;
-def R1  : OpenRISCReg<0, "r1">;
-def R2  : OpenRISCReg<0, "r2">;
+def ZERO : OpenRISCReg<0, "r0">;
+def SP  : OpenRISCReg<0, "r1">;
+def FP  : OpenRISCReg<0, "r2">;
 def R3  : OpenRISCReg<0, "r3">;
 def R4  : OpenRISCReg<0, "r4">;
 def R5  : OpenRISCReg<0, "r5">;
 def R6  : OpenRISCReg<0, "r6">;
 def R7  : OpenRISCReg<0, "r7">;
 def R8  : OpenRISCReg<0, "r8">;
-def R9  : OpenRISCReg<0, "r9">;
+def LR  : OpenRISCReg<0, "r9">;
 def R10 : OpenRISCReg<0, "r10">;
 def R11 : OpenRISCReg<0, "r11">;
 def R12 : OpenRISCReg<0, "r12">;
@@ -53,9 +53,11 @@ def R29 : OpenRISCReg<0, "r29">;
 def R30 : OpenRISCReg<0, "r30">;
 def R31 : OpenRISCReg<0, "r31">;
 
+def PC  : OpenRISCReg<0, "pc">;
+
 //===----------------------------------------------------------------------===//
 //  Register Classes
 //===----------------------------------------------------------------------===//
 
 def GR32 : RegisterClass<"OpenRISC", [i32], 32,
-    (add (sequence "R%u", 0, 31))>;
+    (add (sequence "R%u", 3, 8), (sequence "R%u", 10, 31), LR, SP, FP, ZERO)>;
