@@ -62,5 +62,7 @@ OpenRISCRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
 
 unsigned
 OpenRISCRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
-  assert(0 && "Unimplemented");
+  const TargetFrameLowering *TFI = MF.getTarget().getFrameLowering();
+
+  return TFI->hasFP(MF) ? OpenRISC::FP : OpenRISC::SP;
 }
