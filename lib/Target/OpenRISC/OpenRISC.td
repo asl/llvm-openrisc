@@ -37,7 +37,7 @@ include "OpenRISCRegisterInfo.td"
 // Calling Convention Description
 //===----------------------------------------------------------------------===//
 
-//include "OpenRISCCallingConv.td"
+include "OpenRISCCallingConv.td"
 
 //===----------------------------------------------------------------------===//
 // Instruction Descriptions
