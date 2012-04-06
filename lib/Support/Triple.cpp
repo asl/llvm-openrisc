@@ -166,7 +166,7 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("ptx64", ptx64)
     .Case("le32", le32)
     .Case("amdil", amdil)
-    .Case("or32", or32)
+    .Case("openrisc", or32)
     .Default(UnknownArch);
 }
 
