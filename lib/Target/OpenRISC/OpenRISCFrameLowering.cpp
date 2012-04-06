@@ -35,10 +35,8 @@ bool OpenRISCFrameLowering::hasFP(const MachineFunction &MF) const {
 }
 
 void OpenRISCFrameLowering::emitPrologue(MachineFunction &MF) const {
-  assert(0 && "Unimplemented");
 }
 
 void OpenRISCFrameLowering::emitEpilogue(MachineFunction &MF,
                                          MachineBasicBlock &MBB) const {
-  assert(0 && "Unimplemented");
 }
