@@ -37,6 +37,8 @@ void OpenRISCInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isReg()) {
     O << getRegisterName(Op.getReg());
+  } else if (Op.isImm()) {
+    O << Op.getImm();
   } else
     assert(0 && "Unknown operand in printOperand");
 }

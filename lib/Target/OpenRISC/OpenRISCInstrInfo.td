@@ -45,6 +45,27 @@ def callseq_end   :  SDNode<"ISD::CALLSEQ_END",   SDT_ORCallSeqEnd,
 //===----------------------------------------------------------------------===//
 // Pattern Fragments
 //===----------------------------------------------------------------------===//
+def LO16 : SDNodeXForm<imm, [{
+  // Transformation function: return low 16 bits.
+  return getI16Imm(N->getZExtValue() & 0xFFFFULL);
+}]>;
+
+def HI16 : SDNodeXForm<imm, [{
+  // Transformation function: return bits 16-31.
+  return getI16Imm(N->getZExtValue() >> 16);
+}]>;
+
+def i32lo16 : PatLeaf<(i32 imm), [{  
+  // i32lo16 predicate - true if the 32-bit immediate has only rightmost 16
+  // bits set.
+  return ((N->getZExtValue() & 0FFFFULL) == N->getZExtValue());
+}], LO16>;
+
+def i32hi16 : PatLeaf<(i32 imm), [{  
+  // i32lo16 predicate - true if the 32-bit immediate has only leftmost 16
+  // bits set.
+  return ((N->getZExtValue() & 0xFFFF0000ULL) == N->getZExtValue());
+}], HI16>;
 
 //===----------------------------------------------------------------------===//
 // Instruction list..
@@ -71,6 +92,12 @@ def ADJCALLSTACKDOWN : OpenRISCInst<(outs), (ins i32imm:$amt),
 def ADJCALLSTACKUP   : OpenRISCInst<(outs), (ins i32imm:$amt1, i32imm:$amt2),
                                     "#ADJCALLSTACKUP",
                                     [(callseq_end timm:$amt1, timm:$amt2)]>;
+}
+
+let isReMaterializable = 1, isAsCheapAsAMove = 1 in {
+def MOV32ri16hi : OpenRISCInst<(outs GR32:$rD), (ins i32imm:$K),
+                               "l.movhi\t{$rD, $K}",
+                               [(set GR32:$rD, i32hi16:$K)]>;
 }
 
 let isCommutable = 1 in {
