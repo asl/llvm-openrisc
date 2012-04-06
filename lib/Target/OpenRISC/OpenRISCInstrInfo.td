@@ -2,7 +2,7 @@
 //
 //                     The LLVM Compiler Infrastructure
 //
-// This file is distributed under the University of Illinois Open Source 
+// This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
@@ -55,17 +55,24 @@ def HI16 : SDNodeXForm<imm, [{
   return getI16Imm(N->getZExtValue() >> 16);
 }]>;
 
-def i32lo16 : PatLeaf<(i32 imm), [{  
+def i32lo16 : PatLeaf<(i32 imm), [{
   // i32lo16 predicate - true if the 32-bit immediate has only rightmost 16
   // bits set.
   return ((N->getZExtValue() & 0FFFFULL) == N->getZExtValue());
 }], LO16>;
 
-def i32hi16 : PatLeaf<(i32 imm), [{  
+def i32hi16 : PatLeaf<(i32 imm), [{
   // i32lo16 predicate - true if the 32-bit immediate has only leftmost 16
   // bits set.
   return ((N->getZExtValue() & 0xFFFF0000ULL) == N->getZExtValue());
 }], HI16>;
+
+def immSExt16 : PatLeaf<(i32 imm), [{
+  // immSExt16 predicate - true if the immediate fits in a 16-bit sign extended
+  // field.
+  uint64_t val = N->getZExtValue();
+  return ((int64_t)val == (int16_t)val);
+}]>;
 
 //===----------------------------------------------------------------------===//
 // Instruction list..
@@ -95,10 +102,23 @@ def ADJCALLSTACKUP   : OpenRISCInst<(outs), (ins i32imm:$amt1, i32imm:$amt2),
 }
 
 let isReMaterializable = 1, isAsCheapAsAMove = 1 in {
+def MOV32ri16 : OpenRISCInst<(outs GR32:$rD), (ins i32imm:$I),
+                             "l.addi\t{$rD, r0, $I}",
+                             [(set GR32:$rD, immSExt16:$I)]>;
 def MOV32ri16hi : OpenRISCInst<(outs GR32:$rD), (ins i32imm:$K),
                                "l.movhi\t{$rD, $K}",
                                [(set GR32:$rD, i32hi16:$K)]>;
 }
+
+let isCommutable = 1 in {
+def ADD32rr : OpenRISCInst<(outs GR32:$rD), (ins GR32:$rA, GR32:$rB),
+                           "l.add\t{$rD, $rA, $rB}",
+                           [(set GR32:$rD, (add GR32:$rA, GR32:$rB))]>;
+}
+
+def ADD32ri16 : OpenRISCInst<(outs GR32:$rD), (ins GR32:$rA, i32imm:$I),
+                             "l.addi\t{$rD, $rA, $I}",
+                             [(set GR32:$rD, (add GR32:$rA, immSExt16:$I))]>;
 
 let isCommutable = 1 in {
 def OR32rr : OpenRISCInst<(outs GR32:$rD), (ins GR32:$rA, GR32:$rB),
