@@ -30,3 +30,18 @@ using namespace llvm;
 OpenRISCInstrInfo::OpenRISCInstrInfo(OpenRISCTargetMachine &tm)
   : OpenRISCGenInstrInfo(OpenRISC::ADJCALLSTACKDOWN, OpenRISC::ADJCALLSTACKUP),
     RI(tm, *this), TM(tm) {}
+
+void OpenRISCInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
+                                    MachineBasicBlock::iterator I, DebugLoc DL,
+                                    unsigned DestReg, unsigned SrcReg,
+                                    bool KillSrc) const {
+  unsigned Opc;
+  if (OpenRISC::GR32RegClass.contains(DestReg, SrcReg))
+    Opc = OpenRISC::OR32rr;
+  else
+    llvm_unreachable("Impossible reg-to-reg copy");
+
+  BuildMI(MBB, I, DL, get(Opc), DestReg)
+    .addReg(SrcReg, getKillRegState(KillSrc))
+    .addReg(SrcReg, getKillRegState(KillSrc));
+}

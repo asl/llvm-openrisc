@@ -35,6 +35,11 @@ public:
   /// always be able to get register info as well (through this method).
   ///
   virtual const TargetRegisterInfo &getRegisterInfo() const { return RI; }
+
+  void copyPhysReg(MachineBasicBlock &MBB,
+                   MachineBasicBlock::iterator I, DebugLoc DL,
+                   unsigned DestReg, unsigned SrcReg,
+                   bool KillSrc) const;
 };
 
 }
