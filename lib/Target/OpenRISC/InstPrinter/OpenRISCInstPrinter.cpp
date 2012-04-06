@@ -31,3 +31,12 @@ void OpenRISCInstPrinter::printInst(const MCInst *MI, raw_ostream &O,
   printAnnotation(O, Annot);
 }
 
+void OpenRISCInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
+                                       raw_ostream &O, const char *Modifier) {
+  assert((Modifier == 0 || Modifier[0] == 0) && "No modifiers supported");
+  const MCOperand &Op = MI->getOperand(OpNo);
+  if (Op.isReg()) {
+    O << getRegisterName(Op.getReg());
+  } else
+    assert(0 && "Unknown operand in printOperand");
+}

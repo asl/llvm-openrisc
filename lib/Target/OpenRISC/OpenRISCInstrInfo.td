@@ -59,7 +59,6 @@ let isReturn = 1, isTerminator = 1, isBarrier = 1 in {
                           [(retflag)]>;
 }
 
-
 // ADJCALLSTACKDOWN/UP implicitly use/def SP because they may be expanded into
 // a stack adjustment and the codegen must know that they may modify the stack
 // pointer before prolog-epilog rewriting occurs.
@@ -72,6 +71,12 @@ def ADJCALLSTACKDOWN : OpenRISCInst<(outs), (ins i32imm:$amt),
 def ADJCALLSTACKUP   : OpenRISCInst<(outs), (ins i32imm:$amt1, i32imm:$amt2),
                                     "#ADJCALLSTACKUP",
                                     [(callseq_end timm:$amt1, timm:$amt2)]>;
+}
+
+let isCommutable = 1 in {
+def OR32rr : OpenRISCInst<(outs GR32:$rD), (ins GR32:$rA, GR32:$rB),
+                          "l.or\t{$rD, $rA, $rB}",
+                          [(set GR32:$rD, (or GR32:$rA, GR32:$rB))]>;
 }
 
 //===----------------------------------------------------------------------===//
