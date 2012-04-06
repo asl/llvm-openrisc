@@ -27,7 +27,11 @@
 using namespace llvm;
 
 bool OpenRISCFrameLowering::hasFP(const MachineFunction &MF) const {
-  assert(0 && "Unimplemented");
+  const MachineFrameInfo *MFI = MF.getFrameInfo();
+
+  return (MF.getTarget().Options.DisableFramePointerElim(MF) ||
+          MF.getFrameInfo()->hasVarSizedObjects() ||
+          MFI->isFrameAddressTaken());
 }
 
 void OpenRISCFrameLowering::emitPrologue(MachineFunction &MF) const {
