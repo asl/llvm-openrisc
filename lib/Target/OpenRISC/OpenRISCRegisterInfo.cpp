@@ -47,7 +47,18 @@ OpenRISCRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
 
 BitVector
 OpenRISCRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
-  assert(0 && "Unimplemented");
+  BitVector Reserved(getNumRegs());
+  const TargetFrameLowering *TFI = MF.getTarget().getFrameLowering();
+
+  Reserved.set(OpenRISC::SP);
+  Reserved.set(OpenRISC::PC);
+  Reserved.set(OpenRISC::ZERO);
+
+  // Mark frame pointer as reserved if needed.
+  if (TFI->hasFP(MF))
+    Reserved.set(OpenRISC::FP);
+
+  return Reserved;
 }
 
 const TargetRegisterClass*
