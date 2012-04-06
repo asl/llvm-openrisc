@@ -26,6 +26,9 @@ def SDT_ORCallSeqEnd   : SDCallSeqEnd<[SDTCisVT<0, i32>, SDTCisVT<1, i32>]>;
 //===----------------------------------------------------------------------===//
 // OpenRISC Specific Node Definitions.
 //===----------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
+def retflag       : SDNode<"OpenRISCISD::RET_FLAG", SDTNone,
+                           [SDNPHasChain, SDNPOptInGlue]>;
 def callseq_start :  SDNode<"ISD::CALLSEQ_START", SDT_ORCallSeqStart,
                             [SDNPHasChain, SDNPOutGlue]>;
 def callseq_end   :  SDNode<"ISD::CALLSEQ_END",   SDT_ORCallSeqEnd,
@@ -49,6 +52,12 @@ def callseq_end   :  SDNode<"ISD::CALLSEQ_END",   SDT_ORCallSeqEnd,
 
 let neverHasSideEffects = 1 in
 def NOP : OpenRISCInst<(outs), (ins), "l.nop", []>;
+
+let isReturn = 1, isTerminator = 1, isBarrier = 1 in {
+  def RET  : OpenRISCInst<(outs), (ins),
+                          "l.jr r9 # FIXME: delay slot",
+                          [(retflag)]>;
+}
 
 
 // ADJCALLSTACKDOWN/UP implicitly use/def SP because they may be expanded into
