@@ -43,6 +43,15 @@ OpenRISCTargetLowering::OpenRISCTargetLowering(OpenRISCTargetMachine &tm) :
   Subtarget(*tm.getSubtargetImpl()), TM(tm) {
 
   TD = getTargetData();
+
+  // Set up the register classes.
+  addRegisterClass(MVT::i32, OpenRISC::GR32RegisterClass);
+
+  // Compute derived properties from the register classes
+  computeRegisterProperties();
+
+  setMinFunctionAlignment(4);
+  setPrefFunctionAlignment(4);
 }
 
 SDValue OpenRISCTargetLowering::LowerOperation(SDValue Op,
