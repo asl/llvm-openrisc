@@ -34,3 +34,10 @@ def CC_OpenRISC : CallingConv<[
   // size and 4-byte aligned.
   CCIfType<[i32], CCAssignToStack<4, 4>>
 ]>;
+
+//===----------------------------------------------------------------------===//
+// Callee-saved register lists.
+//===----------------------------------------------------------------------===//
+
+def CSR: CalleeSavedRegs<(add LR, R30, R28, R26, R24, R20, R18, R16, R14, R10, FP)>;
+def CSR_FP: CalleeSavedRegs<(sub CSR, FP)>;

@@ -39,7 +39,9 @@ OpenRISCRegisterInfo::OpenRISCRegisterInfo(OpenRISCTargetMachine &tm,
 
 const uint16_t *
 OpenRISCRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
-  assert(0 && "Unimplemented");
+  const TargetFrameLowering *TFI = MF->getTarget().getFrameLowering();
+
+  return (TFI->hasFP(*MF) ? CSR_FP_SaveList : CSR_SaveList);
 }
 
 
